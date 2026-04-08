@@ -8,7 +8,7 @@ import { ScrollProgressBar } from "./sections/ScrollProgressBar";
 
 export function HomePageLayout() {
   return (
-    <main className="min-h-screen bg-[#09111f] text-[#f5f2ea]">
+    <main className="min-h-screen bg-white text-[#101319]">
       <ScrollProgressBar />
       <div className="flex flex-col">
         <HeroSection />

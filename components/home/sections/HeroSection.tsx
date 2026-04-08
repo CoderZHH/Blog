@@ -215,12 +215,12 @@ export function HeroSection() {
 
   const heroProgress = Math.min(scrollY / Math.max(viewportHeight, 1), 1);
   const backgroundOffset = heroProgress ;
-  const astronautOffset = heroProgress * 270;
-  const copyOffset = heroProgress * 170;
+  const astronautOffset = heroProgress * 190;
+  const copyOffset = heroProgress * 145;
   const meteorOffset = heroProgress * 1000;
 
   return (
-    <section id="top" className="relative min-h-[130vh] overflow-hidden">
+    <section id="top" className="relative min-h-[130vh] overflow-x-hidden">
       <div className="absolute inset-x-0 top-0 z-0 h-[130vh] overflow-hidden">
         <div
           className="absolute inset-x-0 top-0 h-[140vh] will-change-transform"
@@ -274,8 +274,8 @@ export function HeroSection() {
         ))}
       </div>
 
-      <div className="sticky top-0 z-20 h-screen overflow-hidden">
-        <div className="relative grid h-screen grid-cols-1 lg:grid-cols-[1fr_1fr]">
+      <div className="sticky top-0 z-20 h-screen overflow-visible">
+        <div className="relative grid h-screen overflow-visible grid-cols-1 lg:grid-cols-[1fr_1fr]">
           <div
             className="relative flex min-h-[50vh] items-center justify-center lg:h-screen"
             style={{ transform: `translate3d(0, ${astronautOffset}px, 0)` }}
