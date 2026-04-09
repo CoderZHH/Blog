@@ -4,6 +4,14 @@ import Image from "next/image";
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { AstronautViewer } from "@/components/model/AstronautViewer";
 
+function clamp(value: number, min = 0, max = 1) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function easeInOutCubic(value: number) {
+  return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+}
+
 export function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(1);
@@ -218,6 +226,8 @@ export function HeroSection() {
   const astronautOffset = heroProgress * 190;
   const copyOffset = heroProgress * 145;
   const meteorOffset = heroProgress * 1000;
+  const copyScaleProgress = easeInOutCubic(clamp((heroProgress - 0.06) / 0.72));
+  const copyScale = 1 - copyScaleProgress * 0.24;
 
   return (
     <section id="top" className="relative min-h-[130vh] overflow-x-hidden">
@@ -289,19 +299,26 @@ export function HeroSection() {
             className="relative flex min-h-[50vh] items-center lg:h-screen"
             style={{ transform: `translate3d(0, ${copyOffset}px, 0)` }}
           >
-            <div className="hero-title-panel flex flex-col items-start justify-center">
-              <p className="hero-title-kicker">
-                <span>CHAPTER 01</span>
-                <span className="hero-title-kicker-line" />
-              </p>
-              <h1 className="hero-title" aria-label="Welcome To CoderZHH's World">
-                <span className="hero-title-line hero-title-welcome">Welcome To</span>
-                <span className="hero-title-line hero-title-main">CoderZHH&apos;s</span>
-                <span className="hero-title-line hero-title-world">World</span>
-              </h1>
-              <p className="hero-title-subcopy">
-                CoderZHH is all you need.
-              </p>
+            <div
+              style={{
+                transform: `scale(${copyScale})`,
+                transformOrigin: "left center",
+              }}
+            >
+              <div className="hero-title-panel flex flex-col items-start justify-center">
+                <p className="hero-title-kicker">
+                  <span>CHAPTER 01</span>
+                  <span className="hero-title-kicker-line" />
+                </p>
+                <h1 className="hero-title" aria-label="Welcome To CoderZHH's World">
+                  <span className="hero-title-line hero-title-welcome">Welcome To</span>
+                  <span className="hero-title-line hero-title-main">CoderZHH&apos;s</span>
+                  <span className="hero-title-line hero-title-world">World</span>
+                </h1>
+                <p className="hero-title-subcopy">
+                  CoderZHH is all you need.
+                </p>
+              </div>
             </div>
           </div>
         </div>
