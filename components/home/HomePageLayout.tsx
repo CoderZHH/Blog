@@ -3,6 +3,7 @@ import { HeroSection } from "./sections/HeroSection";
 import { HobbySection } from "./sections/HobbySection";
 import { MapPhotoSection } from "./sections/MapPhotoSection";
 import { NotesCarousel } from "./sections/NotesCarousel";
+import { ObsidianFocusSection } from "./sections/ObsidianFocusSection";
 import { PortfolioSection } from "./sections/PortfolioSection";
 import { ScrollProgressBar } from "./sections/ScrollProgressBar";
 
@@ -13,6 +14,7 @@ export function HomePageLayout() {
       <div className="flex flex-col">
         <HeroSection />
         <PortfolioSection />
+        <ObsidianFocusSection />
         <NotesCarousel />
         <MapPhotoSection />
         <HobbySection />

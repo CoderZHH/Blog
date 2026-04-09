@@ -15,7 +15,7 @@ useGLTF.preload("/model/astronaut.glb");
 
 export function AstronautViewer() {
   return (
-    <div className="h-full w-full overflow-hidden">
+    <div className="h-full w-full overflow-hidden pointer-events-none">
       <Canvas camera={{ position: [0, 0.16, 4.35], fov: 32 }} gl={{ alpha: true }}>
         <ambientLight intensity={2.2} />
         <directionalLight position={[4, 6, 8]} intensity={2.8} />

@@ -1,25 +1,64 @@
 "use client";
 
 import Image from "next/image";
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { AstronautViewer } from "@/components/model/AstronautViewer";
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max);
 }
 
+function mix(start: number, end: number, amount: number) {
+  return start + (end - start) * amount;
+}
+
 function easeInOutCubic(value: number) {
   return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
 }
 
+function responsiveScrollProgress(value: number, immediateWeight: number) {
+  const clamped = clamp(value);
+  return clamp(mix(easeInOutCubic(clamped), clamped, immediateWeight));
+}
+
+function foregroundScrollProgress(value: number, immediateWeight: number) {
+  const clamped = clamp(value);
+  const earlyResponse = 1 - Math.pow(1 - clamped, 2.1);
+  return clamp(mix(easeInOutCubic(clamped), earlyResponse, immediateWeight));
+}
+
 export function HeroSection() {
-  const [scrollY, setScrollY] = useState(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(1);
+  const [isNarrow, setIsNarrow] = useState(false);
 
   useEffect(() => {
+    let frame = 0;
+
     const update = () => {
-      setScrollY(window.scrollY);
-      setViewportHeight(window.innerHeight);
+      if (frame) {
+        return;
+      }
+
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+
+        const nextViewportHeight = window.innerHeight || 1;
+        const section = sectionRef.current;
+
+        setViewportHeight(nextViewportHeight);
+        setIsNarrow(window.innerWidth < 1024);
+
+        if (!section) {
+          setScrollProgress(0);
+          return;
+        }
+
+        const rect = section.getBoundingClientRect();
+        const scrollableHeight = Math.max(rect.height - nextViewportHeight, 1);
+        setScrollProgress(clamp(-rect.top / scrollableHeight));
+      });
     };
 
     update();
@@ -27,6 +66,10 @@ export function HeroSection() {
     window.addEventListener("resize", update);
 
     return () => {
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
@@ -221,71 +264,80 @@ export function HeroSection() {
     []
   );
 
-  const heroProgress = Math.min(scrollY / Math.max(viewportHeight, 1), 1);
-  const backgroundOffset = heroProgress ;
-  const astronautOffset = heroProgress * 190;
-  const copyOffset = heroProgress * 145;
-  const meteorOffset = heroProgress * 1000;
-  const copyScaleProgress = easeInOutCubic(clamp((heroProgress - 0.06) / 0.72));
-  const copyScale = 1 - copyScaleProgress * 0.24;
+  const backgroundProgress = responsiveScrollProgress(scrollProgress / 0.94, isNarrow ? 0.2 : 0.14);
+  const astronautProgress = foregroundScrollProgress(scrollProgress / 0.86, isNarrow ? 0.7 : 0.64);
+  const copyTravelProgress = foregroundScrollProgress(scrollProgress / 0.84, isNarrow ? 0.74 : 0.68);
+  const copyScaleProgress = easeInOutCubic(clamp(scrollProgress / 0.84));
+  const backgroundOffset = -viewportHeight * (isNarrow ? 0.1 : 0.14) * backgroundProgress;
+  const backgroundScale = 1.08 - backgroundProgress * 0.08;
+  const astronautOffset = -viewportHeight * (isNarrow ? 0.18 : 0.26) * astronautProgress;
+  const copyOffset = -viewportHeight * (isNarrow ? 0.22 : 0.32) * copyTravelProgress;
+  const meteorOffset = -viewportHeight * 0.42 * backgroundProgress;
+  const copyScale = 1 - copyScaleProgress * (isNarrow ? 0.2 : 0.3);
+  const copyOpacity = 1 - clamp((scrollProgress - 0.5) / 0.4) * 0.14;
+  const backgroundFrameStyle: CSSProperties = {
+    top: `${-viewportHeight * 0.24}px`,
+    bottom: `${-viewportHeight * 1.04}px`,
+    transform: `translate3d(0, ${backgroundOffset}px, 0) scale(${backgroundScale})`,
+  };
 
   return (
-    <section id="top" className="relative min-h-[130vh] overflow-x-hidden">
-      <div className="absolute inset-x-0 top-0 z-0 h-[130vh] overflow-hidden">
-        <div
-          className="absolute inset-x-0 top-0 h-[140vh] will-change-transform"
-          style={{ transform: `translate3d(0, ${backgroundOffset}px, 0)` }}
-        >
-          <Image
-            src="/img/背景.png"
-            alt="Hero background"
-            fill
-            priority
-            className="object-cover object-center"
-          />
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,10,19,0.86)_0%,rgba(5,10,19,0.54)_36%,rgba(5,10,19,0.2)_58%,rgba(5,10,19,0.74)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,17,31,0.18)_0%,rgba(9,17,31,0.42)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_72%_18%,rgba(124,162,255,0.12),transparent_18%),radial-gradient(circle_at_26%_68%,rgba(255,255,255,0.06),transparent_18%)]" />
-      </div>
-
-      <div className="absolute inset-x-0 top-0 z-10 h-[130vh] overflow-hidden pointer-events-none">
-        {meteors.map((meteor, index) => (
+    <section ref={sectionRef} id="top" className="relative min-h-[176vh] overflow-x-hidden bg-[#040812]">
+      <div className="sticky top-0 z-20 h-screen overflow-visible">
+        <div className="pointer-events-none absolute inset-0 z-0">
           <div
-            key={`${meteor.top}-${meteor.left}-${index}`}
-            className="absolute"
-            style={{
-              top: meteor.top,
-              left: meteor.left,
-              transform: `translate3d(0, ${meteorOffset * 0.35}px, 0)`,
-            }}
+            className="absolute -left-[6vw] -right-[6vw] will-change-transform"
+            style={backgroundFrameStyle}
           >
+            <Image
+              src="/img/背景.png"
+              alt="Hero background"
+              fill
+              priority
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,10,19,0.86)_0%,rgba(5,10,19,0.54)_36%,rgba(5,10,19,0.2)_58%,rgba(5,10,19,0.74)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,17,31,0.18)_0%,rgba(9,17,31,0.42)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_72%_18%,rgba(124,162,255,0.12),transparent_18%),radial-gradient(circle_at_26%_68%,rgba(255,255,255,0.06),transparent_18%)]" />
+          </div>
+        </div>
+
+        <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+          {meteors.map((meteor, index) => (
             <div
-              className="meteor-flight"
+              key={`${meteor.top}-${meteor.left}-${index}`}
+              className="absolute"
               style={{
-                width: `${meteor.width}px`,
-                animation: `meteor-flight ${meteor.duration} linear infinite`,
-                animationDelay: meteor.delay,
-                "--meteor-from-x": `${Math.cos((meteor.angle * Math.PI) / 180) * meteor.travel * -0.32}px`,
-                "--meteor-from-y": `${Math.sin((meteor.angle * Math.PI) / 180) * meteor.travel * -0.32}px`,
-                "--meteor-to-x": `${Math.cos((meteor.angle * Math.PI) / 180) * meteor.travel}px`,
-                "--meteor-to-y": `${Math.sin((meteor.angle * Math.PI) / 180) * meteor.travel}px`,
-              } as CSSProperties}
+                top: meteor.top,
+                left: meteor.left,
+                transform: `translate3d(0, ${meteorOffset * 0.35}px, 0)`,
+              }}
             >
-              <span
-                className="meteor-streak"
+              <div
+                className="meteor-flight"
                 style={{
                   width: `${meteor.width}px`,
-                  transform: `rotate(${meteor.angle}deg)`,
-                }}
-              />
+                  animation: `meteor-flight ${meteor.duration} linear infinite`,
+                  animationDelay: meteor.delay,
+                  "--meteor-from-x": `${Math.cos((meteor.angle * Math.PI) / 180) * meteor.travel * -0.32}px`,
+                  "--meteor-from-y": `${Math.sin((meteor.angle * Math.PI) / 180) * meteor.travel * -0.32}px`,
+                  "--meteor-to-x": `${Math.cos((meteor.angle * Math.PI) / 180) * meteor.travel}px`,
+                  "--meteor-to-y": `${Math.sin((meteor.angle * Math.PI) / 180) * meteor.travel}px`,
+                } as CSSProperties}
+              >
+                <span
+                  className="meteor-streak"
+                  style={{
+                    width: `${meteor.width}px`,
+                    transform: `rotate(${meteor.angle}deg)`,
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <div className="sticky top-0 z-20 h-screen overflow-visible">
-        <div className="relative grid h-screen overflow-visible grid-cols-1 lg:grid-cols-[1fr_1fr]">
+        <div className="relative z-20 grid h-screen overflow-visible grid-cols-1 lg:grid-cols-[1fr_1fr]">
           <div
             className="relative flex min-h-[50vh] items-center justify-center lg:h-screen"
             style={{ transform: `translate3d(0, ${astronautOffset}px, 0)` }}
@@ -297,12 +349,12 @@ export function HeroSection() {
 
           <div
             className="relative flex min-h-[50vh] items-center lg:h-screen"
-            style={{ transform: `translate3d(0, ${copyOffset}px, 0)` }}
+            style={{ transform: `translate3d(0, ${copyOffset}px, 0)`, opacity: copyOpacity }}
           >
             <div
               style={{
                 transform: `scale(${copyScale})`,
-                transformOrigin: "left center",
+                transformOrigin: isNarrow ? "center top" : "left center",
               }}
             >
               <div className="hero-title-panel flex flex-col items-start justify-center">

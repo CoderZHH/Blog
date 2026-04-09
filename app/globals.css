@@ -259,6 +259,135 @@ select {
   }
 }
 
+.obsidian-markdown {
+  color: #243445;
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.obsidian-markdown > :first-child {
+  margin-top: 0;
+}
+
+.obsidian-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.obsidian-markdown h1,
+.obsidian-markdown h2,
+.obsidian-markdown h3,
+.obsidian-markdown h4,
+.obsidian-markdown h5,
+.obsidian-markdown h6 {
+  margin: 2.2rem 0 1rem;
+  color: #09111f;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+.obsidian-markdown h1 {
+  font-size: 2.1rem;
+}
+
+.obsidian-markdown h2 {
+  font-size: 1.7rem;
+}
+
+.obsidian-markdown h3 {
+  font-size: 1.35rem;
+}
+
+.obsidian-markdown p,
+.obsidian-markdown ul,
+.obsidian-markdown ol,
+.obsidian-markdown blockquote,
+.obsidian-markdown pre {
+  margin: 1rem 0;
+}
+
+.obsidian-markdown ul,
+.obsidian-markdown ol {
+  padding-left: 1.5rem;
+}
+
+.obsidian-markdown li + li {
+  margin-top: 0.4rem;
+}
+
+.obsidian-markdown hr {
+  margin: 1.8rem 0;
+  border: 0;
+  border-top: 1px solid rgba(119, 142, 166, 0.25);
+}
+
+.obsidian-markdown blockquote {
+  border-left: 3px solid rgba(77, 147, 255, 0.34);
+  padding: 0.2rem 0 0.2rem 1rem;
+  color: #50657b;
+  background: linear-gradient(90deg, rgba(107, 176, 255, 0.08), transparent);
+}
+
+.obsidian-md-inline-code,
+.obsidian-markdown code {
+  border-radius: 0.65rem;
+  background: #eef5fb;
+  padding: 0.1rem 0.42rem;
+  color: #0f4f85;
+  font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+  font-size: 0.92em;
+}
+
+.obsidian-md-codeblock,
+.obsidian-markdown pre {
+  overflow-x: auto;
+  border: 1px solid #d8e4ef;
+  border-radius: 1.2rem;
+  background: #0f1724;
+  padding: 1rem 1.1rem;
+}
+
+.obsidian-md-codeblock code,
+.obsidian-markdown pre code {
+  background: transparent;
+  padding: 0;
+  color: #e8f2ff;
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.obsidian-md-anchor {
+  color: #0b67b5;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.obsidian-md-note-link {
+  color: #4d6a87;
+  font-weight: 600;
+}
+
+.obsidian-md-image {
+  display: block;
+  width: auto;
+  max-width: min(100%, 880px);
+  height: auto;
+  margin: 1.35rem auto;
+  border: 1px solid #d8e4ef;
+  border-radius: 1.3rem;
+  background: #f7fbff;
+  box-shadow: 0 24px 70px rgba(16, 39, 70, 0.12);
+}
+
+.obsidian-md-broken-image {
+  display: inline-block;
+  border-radius: 999px;
+  background: rgba(212, 226, 239, 0.7);
+  padding: 0.2rem 0.6rem;
+  color: #61768c;
+  font-size: 0.9em;
+}
+
 @keyframes hero-subcopy-rise {
   0% {
     opacity: 0;
