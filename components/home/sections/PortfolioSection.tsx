@@ -92,7 +92,7 @@ function PortfolioWorkPanel({
   const captionFontSize = clamp(viewportWidth * 0.008, 3, 12);
 
   return (
-    <article className="relative h-full min-w-full overflow-hidden bg-white" aria-label={work.label}>
+    <article className="relative h-full min-w-full overflow-hidden bg-[#050914]" aria-label={work.label}>
       <div
         className="absolute inset-0 z-0 will-change-transform"
         style={{ transform: `scale(${backgroundScale})` }}
@@ -109,12 +109,12 @@ function PortfolioWorkPanel({
         />
       </div>
 
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_42%,rgba(255,255,255,0.12)_100%)]" />
-      <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_38%,rgba(255,255,255,0)_62%,rgba(255,255,255,0.16)_100%)]" />
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(2,7,18,0.3)_0%,rgba(2,7,18,0.08)_42%,rgba(2,7,18,0.5)_100%)]" />
+      <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(3,8,19,0.58)_0%,rgba(3,8,19,0.08)_38%,rgba(3,8,19,0.08)_62%,rgba(3,8,19,0.58)_100%)]" />
 
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-5">
         <div
-          className="relative w-[74%] max-w-[980px] overflow-hidden rounded-lg border border-white/40 bg-white/45 shadow-[0_22px_54px_rgba(178,193,211,0.18)] will-change-transform max-md:w-[86%]"
+          className="relative w-[74%] max-w-[980px] overflow-hidden rounded-lg border border-white/14 bg-black/20 shadow-[0_24px_70px_rgba(0,0,0,0.42),0_0_34px_rgba(154,207,255,0.14)] will-change-transform max-md:w-[86%]"
           style={
             {
               aspectRatio: work.mainAspect,
@@ -336,9 +336,7 @@ export function PortfolioSection() {
             borderTopRightRadius: `${stageShellRadius}px`,
           }}
         >
-          <div className="pointer-events-none absolute inset-0 bg-[#f5f6f8]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.96)_0%,rgba(247,248,250,0.94)_26%,rgba(239,241,245,0.86)_56%,rgba(229,233,238,0.78)_100%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(214,220,228,0.14)_0%,rgba(245,247,250,0)_18%,rgba(245,247,250,0)_82%,rgba(214,220,228,0.14)_100%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-white" />
           <div className="absolute inset-0 flex items-center justify-center overflow-hidden px-4 py-8 md:px-8">
             <div
               className="portfolio-macbook-stage"
@@ -350,29 +348,6 @@ export function PortfolioSection() {
                 } as CSSProperties
               }
             >
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              width: `${stageWidth * (isNarrow ? 0.72 : 0.62)}px`,
-              height: `${stageHeight * (isNarrow ? 0.58 : 0.48)}px`,
-              background:
-                "radial-gradient(circle, rgba(220,228,238,0.52) 0%, rgba(232,238,245,0.26) 42%, rgba(245,247,250,0) 76%)",
-              filter: `blur(${48 * macbookUnit}px)`,
-              opacity: 0.92 - rotateProgress * 0.24,
-            }}
-          />
-          <div
-            className="pointer-events-none absolute left-1/2 top-[74%] z-0 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              width: `${stageWidth * (isNarrow ? 0.54 : 0.38)}px`,
-              height: `${stageHeight * (isNarrow ? 0.14 : 0.12)}px`,
-              background:
-                "radial-gradient(circle, rgba(214,222,232,0.42) 0%, rgba(230,236,243,0.22) 34%, rgba(245,247,250,0.06) 58%, rgba(245,247,250,0) 82%)",
-              filter: `blur(${26 * macbookUnit}px)`,
-              opacity: 0.34 + rotateProgress * 0.08,
-              transform: `translate(-50%, -50%) scale(${1 + rotateProgress * 0.28})`,
-            }}
-          />
           <div className={`portfolio-macbook-scope ${isMacbookActive ? "is-active" : ""}`}>
             <div className="container">
               <div
@@ -528,9 +503,8 @@ export function PortfolioSection() {
             height: var(--frame-height);
             border-radius: 6em;
             transform-origin: center;
-            background: linear-gradient(-135deg, #f4f6f9 52%, #d9dfe6 56%);
+            background: linear-gradient(-135deg, #c8c9c9 52%, #8c8c8c 56%);
             transform: scale(0) skewY(var(--screen-skew));
-            box-shadow: 0 22em 46em rgba(198, 207, 219, 0.16);
           }
 
           .portfolio-macbook-scope.is-active .macbook__topBord {
@@ -546,8 +520,7 @@ export function PortfolioSection() {
             width: 100%;
             height: 100%;
             border-radius: var(--screen-radius);
-            background: #f8fbfd;
-            box-shadow: inset 0 0 0 1.2em rgba(217, 223, 231, 0.88);
+            background: #000;
           }
 
           .portfolio-macbook-scope .macbook__topBord::after {
@@ -560,7 +533,7 @@ export function PortfolioSection() {
             height: 12em;
             transform-origin: left bottom;
             transform: rotate(-42deg) skew(-4deg);
-            background: linear-gradient(-135deg, #f4f6f9 52%, #d9dfe6 56%);
+            background: linear-gradient(-135deg, #c8c9c9 52%, #8c8c8c 56%);
             opacity: var(--silver-opacity);
           }
 
@@ -573,7 +546,7 @@ export function PortfolioSection() {
             height: var(--display-height);
             overflow: hidden;
             border-radius: var(--screen-radius);
-            background: #f8fbfd;
+            background: #000;
           }
 
           .portfolio-macbook-scope .macbook__display::before {
@@ -609,7 +582,7 @@ export function PortfolioSection() {
             position: absolute;
             z-index: 2;
             overflow: hidden;
-            background: #f8fbfd;
+            background: #050914;
             pointer-events: none;
             will-change: left, top, width, height, opacity;
           }
@@ -633,7 +606,7 @@ export function PortfolioSection() {
             z-index: 20;
             width: 100%;
             height: 100%;
-            background: #f8fbfd;
+            background: #222;
             pointer-events: none;
             --load-progress: 0;
             --load-width: 80em;
@@ -675,7 +648,7 @@ export function PortfolioSection() {
             border-radius: 6em;
             transform-origin: center;
             transform: scale(0) rotate(var(--under-rotate)) skew(var(--under-skew));
-            background: linear-gradient(-45deg, #edf1f5 61%, #d6dde5 66%);
+            background: linear-gradient(-45deg, #c8c9c9 61%, #8c8c8c 66%);
             opacity: 0;
           }
 
@@ -692,7 +665,7 @@ export function PortfolioSection() {
             width: 100%;
             height: 100%;
             border-radius: 6em;
-            background: #eef2f6;
+            background: #dcdede;
           }
 
           .portfolio-macbook-scope .macbook__underBord::after {
@@ -704,7 +677,7 @@ export function PortfolioSection() {
             width: 170em;
             height: 15em;
             transform-origin: top left;
-            background: linear-gradient(-45deg, #edf1f5 61%, #d6dde5 66%);
+            background: linear-gradient(-45deg, #c8c9c9 61%, #8c8c8c 66%);
             transform: rotate(31deg) skew(-16deg);
           }
 
@@ -716,7 +689,7 @@ export function PortfolioSection() {
             border-radius: 3em;
             width: calc(100% - 16em);
             height: 45em;
-            background: #edf1f5;
+            background: #c8c9c9;
           }
 
           .portfolio-macbook-scope .macbook__keybord::before {
@@ -729,7 +702,7 @@ export function PortfolioSection() {
             width: 40em;
             height: 25em;
             border-radius: 3em;
-            background: #edf1f5;
+            background: #c8c9c9;
           }
 
           .portfolio-macbook-scope .keybord {
@@ -746,7 +719,7 @@ export function PortfolioSection() {
             width: 100%;
             height: 6em;
             border-radius: 3em;
-            background: #d9e0e7;
+            background: #000;
           }
 
           .portfolio-macbook-scope .keybord__keyBox {
@@ -774,7 +747,7 @@ export function PortfolioSection() {
             width: 8em;
             height: 7em;
             margin: 1em;
-            background: #dfe5eb;
+            background: #000;
           }
 
           .portfolio-macbook-scope .keybord__keyBox .keybord__key {
@@ -793,7 +766,7 @@ export function PortfolioSection() {
             left: 0;
             width: 100%;
             height: 100%;
-            background: #dfe5eb;
+            background: #000;
           }
 
           .portfolio-macbook-scope .keybord__key::before {
