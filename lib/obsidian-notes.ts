@@ -1,7 +1,7 @@
 const NOTE_FILE_PATTERN = /\.(md|mdx|markdown)$/i;
 
-const NOTE_LIMIT = 10;
-const COMMIT_SCAN_LIMIT = 20;
+const NOTE_LIMIT = 18;
+const COMMIT_SCAN_LIMIT = 40;
 const NOTES_REVALIDATE_SECONDS = 300;
 
 export const OBSIDIAN_NOTES_TAG = "obsidian-notes";
@@ -51,6 +51,7 @@ export type ObsidianNoteUpdate = {
   sha: string;
   commitMessage: string;
   excerpt: string;
+  previewText: string;
   content: string;
 };
 
@@ -168,6 +169,7 @@ async function getNoteContent(config: ObsidianNotesConfig, path: string) {
   return {
     content,
     excerpt: toExcerpt(content),
+    previewText: toPreviewText(content),
   };
 }
 
@@ -233,7 +235,7 @@ export async function getLatestObsidianNotes(): Promise<ObsidianNotesResult> {
 
     const seen = new Set<string>();
     const noteSeeds: Array<
-      Omit<ObsidianNoteUpdate, "excerpt" | "content">
+      Omit<ObsidianNoteUpdate, "excerpt" | "previewText" | "content">
     > = [];
 
     for (const detail of details) {

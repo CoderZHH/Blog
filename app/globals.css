@@ -1,8 +1,48 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #101319;
+  --card: #ffffff;
+  --card-foreground: #101319;
+  --primary: #101319;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f5f7;
+  --secondary-foreground: #101319;
+  --muted: #f3f5f7;
+  --muted-foreground: #5c6875;
+  --accent: #edf3f8;
+  --accent-foreground: #101319;
+  --border: #dbe4ec;
+  --input: #dbe4ec;
+  --ring: #101319;
+  --destructive: #c73a4a;
+  --destructive-foreground: #ffffff;
+  --radius: 1rem;
 }
 
 * {
@@ -386,6 +426,120 @@ select {
   padding: 0.2rem 0.6rem;
   color: #61768c;
   font-size: 0.9em;
+}
+
+.obsidian-md-table-wrap {
+  overflow-x: auto;
+  margin: 1.2rem 0;
+  border: 1px solid #d8e4ef;
+  border-radius: 0.85rem;
+  background: #fbfdff;
+}
+
+.obsidian-md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96rem;
+}
+
+.obsidian-md-table th,
+.obsidian-md-table td {
+  border-bottom: 1px solid #e3edf6;
+  border-right: 1px solid #e3edf6;
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.obsidian-md-table th:last-child,
+.obsidian-md-table td:last-child {
+  border-right: none;
+}
+
+.obsidian-md-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.obsidian-md-table th {
+  background: #f3f8fd;
+  color: #1f3347;
+  font-weight: 700;
+}
+
+.obsidian-md-table td {
+  color: #30465c;
+}
+
+@keyframes notes-marquee-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(calc(-50% - (var(--lane-gap, 1rem) / 2)), 0, 0);
+  }
+}
+
+@keyframes notes-marquee-right {
+  0% {
+    transform: translate3d(calc(-50% - (var(--lane-gap, 1rem) / 2)), 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.notes-kinetic-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 1) 8%,
+    rgba(0, 0, 0, 1) 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 1) 8%,
+    rgba(0, 0, 0, 1) 92%,
+    transparent 100%
+  );
+}
+
+.notes-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: var(--lane-gap, 1rem);
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.notes-marquee__track--left {
+  animation-name: notes-marquee-left;
+}
+
+.notes-marquee__track--right {
+  animation-name: notes-marquee-right;
+}
+
+.notes-marquee--pause:hover .notes-marquee__track {
+  animation-play-state: paused;
+}
+
+.notes-marquee__group {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--lane-gap, 1rem);
+  padding-right: var(--lane-gap, 1rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notes-marquee__track {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
 }
 
 @keyframes hero-subcopy-rise {

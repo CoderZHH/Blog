@@ -154,7 +154,8 @@ function renderInlineHtml(text: string, note: ObsidianNoteUpdate) {
   let tokenIndex = 0;
 
   const stash = (html: string) => {
-    const key = `__OBSIDIAN_TOKEN_${tokenIndex}__`;
+    // Use a marker that won't be touched by markdown inline regex replacements.
+    const key = `%%OBSIDIANTOKEN${tokenIndex}%%`;
     tokenIndex += 1;
     tokens.push({ key, html });
     return key;
@@ -205,8 +206,36 @@ type MarkdownBlock =
   | { type: "paragraph"; text: string }
   | { type: "blockquote"; text: string }
   | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "code"; code: string }
   | { type: "hr" };
+
+export type ObsidianHeading = {
+  id: string;
+  depth: number;
+  text: string;
+};
+
+function toHeadingText(value: string) {
+  return value
+    .replace(/!\[\[([^[\]]+?)\]\]/g, "$1")
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "$1")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .replace(/\[\[([^[\]]+?)\]\]/g, "$1")
+    .replace(/[*_~`#>/]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function slugifyHeading(value: string) {
+  const normalized = toHeadingText(value)
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .trim()
+    .replace(/\s+/g, "-");
+
+  return normalized || "section";
+}
 
 function parseBlocks(content: string): MarkdownBlock[] {
   const blocks: MarkdownBlock[] = [];
@@ -241,6 +270,38 @@ function parseBlocks(content: string): MarkdownBlock[] {
     if (/^---+$/.test(line.trim()) || /^\*\*\*+$/.test(line.trim())) {
       blocks.push({ type: "hr" });
       index += 1;
+      continue;
+    }
+
+    const nextLine = index + 1 < lines.length ? lines[index + 1] : "";
+    const isTableDivider = /^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?\s*$/.test(nextLine);
+    const isHeaderRow = /\|/.test(line);
+
+    if (isHeaderRow && isTableDivider) {
+      const parseTableRow = (row: string) =>
+        row
+          .trim()
+          .replace(/^\|/, "")
+          .replace(/\|$/, "")
+          .split("|")
+          .map((cell) => cell.trim());
+
+      const headers = parseTableRow(line);
+      index += 2;
+      const rows: string[][] = [];
+
+      while (index < lines.length) {
+        const rowLine = lines[index];
+
+        if (!rowLine.trim() || !/\|/.test(rowLine)) {
+          break;
+        }
+
+        rows.push(parseTableRow(rowLine));
+        index += 1;
+      }
+
+      blocks.push({ type: "table", headers, rows });
       continue;
     }
 
@@ -309,13 +370,18 @@ function parseBlocks(content: string): MarkdownBlock[] {
 
 export function renderObsidianMarkdown(content: string, note: ObsidianNoteUpdate) {
   const blocks = parseBlocks(content);
+  const headingCounts = new Map<string, number>();
 
   return blocks
     .map((block) => {
       if (block.type === "heading") {
         const tag = `h${Math.min(block.depth, 6)}`;
+        const baseId = slugifyHeading(block.text);
+        const count = headingCounts.get(baseId) || 0;
+        headingCounts.set(baseId, count + 1);
+        const headingId = count === 0 ? baseId : `${baseId}-${count + 1}`;
 
-        return `<${tag}>${renderInlineHtml(block.text, note)}</${tag}>`;
+        return `<${tag} id="${escapeAttribute(headingId)}">${renderInlineHtml(block.text, note)}</${tag}>`;
       }
 
       if (block.type === "paragraph") {
@@ -334,6 +400,22 @@ export function renderObsidianMarkdown(content: string, note: ObsidianNoteUpdate
         return "<hr />";
       }
 
+      if (block.type === "table") {
+        const headerHtml = block.headers
+          .map((header) => `<th>${renderInlineHtml(header, note)}</th>`)
+          .join("");
+        const bodyHtml = block.rows
+          .map(
+            (row) =>
+              `<tr>${row
+                .map((cell) => `<td>${renderInlineHtml(cell, note)}</td>`)
+                .join("")}</tr>`
+          )
+          .join("");
+
+        return `<div class="obsidian-md-table-wrap"><table class="obsidian-md-table"><thead><tr>${headerHtml}</tr></thead><tbody>${bodyHtml}</tbody></table></div>`;
+      }
+
       const tag = block.ordered ? "ol" : "ul";
 
       return `<${tag}>${block.items
@@ -341,4 +423,28 @@ export function renderObsidianMarkdown(content: string, note: ObsidianNoteUpdate
         .join("")}</${tag}>`;
     })
     .join("");
+}
+
+export function extractObsidianHeadings(content: string): ObsidianHeading[] {
+  const blocks = parseBlocks(content);
+  const headingCounts = new Map<string, number>();
+
+  return blocks.flatMap((block) => {
+    if (block.type !== "heading") {
+      return [];
+    }
+
+    const text = toHeadingText(block.text);
+
+    if (!text) {
+      return [];
+    }
+
+    const baseId = slugifyHeading(block.text);
+    const count = headingCounts.get(baseId) || 0;
+    headingCounts.set(baseId, count + 1);
+    const id = count === 0 ? baseId : `${baseId}-${count + 1}`;
+
+    return [{ id, depth: block.depth, text }];
+  });
 }

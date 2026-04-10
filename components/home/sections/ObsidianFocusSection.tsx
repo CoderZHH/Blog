@@ -42,9 +42,9 @@ function getResponsiveDots(isNarrow: boolean) {
   const innerLeft = isNarrow ? 24 : 26;
   const innerRight = 100 - innerLeft;
   const outerRight = 100 - outerLeft;
-  const topRow = isNarrow ? 35.5 : 36;
-  const middleRow = isNarrow ? 49.5 : 49.5;
-  const bottomRow = isNarrow ? 63.5 : 63;
+  const topRow = isNarrow ? 27 : 28;
+  const middleRow = isNarrow ? 45.5 : 46.5;
+  const bottomRow = isNarrow ? 64 : 65;
   const topCenter = topRow;
   const bottomCenter = bottomRow;
 
@@ -197,8 +197,8 @@ export function ObsidianFocusSection() {
         }
 
         const rect = section.getBoundingClientRect();
-        const startLine = viewportHeight * 0.88;
-        const travel = Math.max(rect.height + viewportHeight * 0.42, 1);
+        const startLine = viewportHeight * 0.82;
+        const travel = Math.max(rect.height + viewportHeight * 0.18, 1);
         setProgress(clamp((startLine - rect.top) / travel));
       });
     };
@@ -217,21 +217,15 @@ export function ObsidianFocusSection() {
     };
   }, []);
 
-  const lineOneActivation = easeOutQuint(clamp((progress - 0.2) / 0.24));
-  const obsidianActivation = easeOutQuint(clamp((progress - 0.24) / 0.3));
-  const noteActivation = easeOutQuint(clamp((progress - 0.28) / 0.34));
-  const textLift = mix(24, 0, easeOutCubic(clamp((progress - 0.2) / 0.56)));
-  const textScale = mix(0.97, 1, easeOutCubic(clamp((progress - 0.18) / 0.66)));
+  const lineOneActivation = easeOutQuint(clamp((progress - 0.24) / 0.72));
+  const textFloat = easeOutCubic(clamp((progress - 0.14) / 0.76));
+  const textLift = mix(52, 0, textFloat);
+  const textScale = mix(0.945, 1, easeOutCubic(clamp((progress - 0.16) / 0.9)));
   const textWidth = isNarrow ? "min(80vw, 22rem)" : "min(62vw, 52rem)";
 
   const lineOneGray = mix(224, 16, lineOneActivation);
-  const obsidianGray = mix(232, 16, obsidianActivation);
-  const noteGray = mix(234, 16, noteActivation);
-  const lineOneBlur = mix(5.5, 0, lineOneActivation);
-  const obsidianBlur = mix(2.8, 0, obsidianActivation);
-  const noteBlur = mix(3, 0, noteActivation);
+  const lineOneBlur = mix(10, 0, lineOneActivation);
   const lineOneSpacing = mix(0.01, -0.05, lineOneActivation);
-  const lineTwoSpacing = mix(0.01, -0.05, Math.max(obsidianActivation, noteActivation * 0.82));
 
   const dots = getResponsiveDots(isNarrow);
 
@@ -239,13 +233,13 @@ export function ObsidianFocusSection() {
     <section
       ref={sectionRef}
       id="obsidian-focus"
-      className="relative z-20 h-[124vh] bg-white text-[#101319] md:h-[132vh]"
+      className="relative z-20 h-[24svh] bg-white text-[#101319] md:h-[24vh]"
     >
       <div className="relative h-full overflow-hidden bg-white">
         <div className="relative mx-auto h-full w-full max-w-[1680px]">
           {dots.map((dot) => {
             const isVertical = dot.motion === "top" || dot.motion === "bottom";
-            const revealWindow = isVertical ? 0.56 : 0.54;
+            const revealWindow = isVertical ? 0.88 : 0.82;
             const revealStart = isVertical
               ? dot.motion === "top"
                 ? 0.14
@@ -278,7 +272,7 @@ export function ObsidianFocusSection() {
             );
           })}
 
-          <div className="absolute inset-x-0 top-[49.5%] flex -translate-y-1/2 justify-center px-6">
+          <div className="absolute inset-x-0 top-[48%] flex -translate-y-1/2 justify-center px-6">
             <div
               className="flex flex-col items-center text-center"
               style={{
@@ -297,15 +291,6 @@ export function ObsidianFocusSection() {
               >
                 What I&apos;m Busying
               </h2>
-
-              <p
-                className="mt-3 mb-0 text-[clamp(1.95rem,4.35vw,4.55rem)] font-[540] leading-[0.96] md:mt-4"
-                style={{
-                  letterSpacing: `${lineTwoSpacing}em`,
-                  fontFamily: '"Inter", "Helvetica Neue", Arial, sans-serif',
-                }}
-              >
-              </p>
             </div>
           </div>
         </div>
