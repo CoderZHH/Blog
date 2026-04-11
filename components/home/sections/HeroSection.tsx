@@ -27,7 +27,13 @@ function foregroundScrollProgress(value: number, immediateWeight: number) {
   return clamp(mix(easeInOutCubic(clamped), earlyResponse, immediateWeight));
 }
 
-export function HeroSection() {
+type IntroPhase = "idle" | "feedback" | "warp" | "reveal" | "done";
+
+interface HeroSectionProps {
+  introPhase?: IntroPhase;
+}
+
+export function HeroSection({ introPhase = "idle" }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(1);
@@ -280,11 +286,23 @@ export function HeroSection() {
     bottom: `${-viewportHeight * 1.04}px`,
     transform: `translate3d(0, ${backgroundOffset}px, 0) scale(${backgroundScale})`,
   };
+  const introClassName =
+    introPhase === "feedback" || introPhase === "warp"
+      ? "intro-hero-preload"
+      : introPhase === "reveal"
+        ? "intro-hero-revealing"
+        : introPhase === "done"
+          ? "intro-hero-ready"
+          : "";
 
   return (
-    <section ref={sectionRef} id="top" className="relative min-h-[176vh] overflow-x-hidden bg-[#040812]">
+    <section
+      ref={sectionRef}
+      id="top"
+      className={`intro-hero-section relative min-h-[176vh] overflow-x-hidden bg-[#040812] ${introClassName}`}
+    >
       <div className="sticky top-0 z-20 h-screen overflow-visible">
-        <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="intro-hero-bg pointer-events-none absolute inset-0 z-0">
           <div
             className="absolute -left-[6vw] -right-[6vw] will-change-transform"
             style={backgroundFrameStyle}
@@ -302,7 +320,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+        <div className="intro-hero-meteors absolute inset-0 z-10 overflow-hidden pointer-events-none">
           {meteors.map((meteor, index) => (
             <div
               key={`${meteor.top}-${meteor.left}-${index}`}
@@ -339,7 +357,7 @@ export function HeroSection() {
 
         <div className="relative z-20 grid h-screen overflow-visible grid-cols-1 lg:grid-cols-[1fr_1fr]">
           <div
-            className="relative flex min-h-[50vh] items-center justify-center lg:h-screen"
+            className="intro-hero-astronaut relative flex min-h-[50vh] items-center justify-center lg:h-screen"
             style={{ transform: `translate3d(0, ${astronautOffset}px, 0)` }}
           >
             <div className="h-[68vh] w-full lg:h-[108vh]">
@@ -348,7 +366,7 @@ export function HeroSection() {
           </div>
 
           <div
-            className="relative flex min-h-[50vh] items-center lg:h-screen"
+            className="intro-hero-copy relative flex min-h-[50vh] items-center lg:h-screen"
             style={{ transform: `translate3d(0, ${copyOffset}px, 0)`, opacity: copyOpacity }}
           >
             <div

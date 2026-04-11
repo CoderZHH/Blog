@@ -1,5 +1,5 @@
-import { HomePageLayout } from "@/components/home/HomePageLayout";
+import { IntroHeroFlow } from "@/components/home/IntroHeroFlow";
 
 export default function HomePage() {
-  return <HomePageLayout />;
+  return <IntroHeroFlow />;
 }
