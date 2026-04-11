@@ -449,12 +449,12 @@ function PortfolioWorkPanel({
         />
       </div>
 
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(2,7,18,0.3)_0%,rgba(2,7,18,0.08)_42%,rgba(2,7,18,0.5)_100%)]" />
-      <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(3,8,19,0.58)_0%,rgba(3,8,19,0.08)_38%,rgba(3,8,19,0.08)_62%,rgba(3,8,19,0.58)_100%)]" />
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(2,7,18,0.14)_0%,rgba(2,7,18,0.03)_42%,rgba(2,7,18,0.22)_100%)]" />
+      <div className="absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(3,8,19,0.24)_0%,rgba(3,8,19,0.02)_38%,rgba(3,8,19,0.02)_62%,rgba(3,8,19,0.24)_100%)]" />
 
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-5">
         <div
-          className="relative w-[74%] max-w-[980px] overflow-hidden rounded-lg border border-white/14 bg-black/20 shadow-[0_24px_70px_rgba(0,0,0,0.42),0_0_34px_rgba(154,207,255,0.14)] will-change-transform max-md:w-[86%]"
+          className="relative w-[74%] max-w-[980px] overflow-hidden rounded-lg border border-white/14 bg-black/20 shadow-[0_18px_52px_rgba(0,0,0,0.24),0_0_24px_rgba(154,207,255,0.1)] will-change-transform max-md:w-[86%]"
           style={
             {
               aspectRatio: work.mainAspect,

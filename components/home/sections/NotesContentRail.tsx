@@ -353,7 +353,7 @@ function NoteDialog({ note, headings, onJumpToHeading, onContentScrollReady, onC
               <div className="min-h-0 pt-7 lg:pl-10">
                 <div className="h-full overflow-y-auto pr-1" ref={onContentScrollReady}>
                   <article
-                    className="obsidian-markdown"
+                    className="obsidian-markdown obsidian-markdown--dense"
                     dangerouslySetInnerHTML={{
                       __html: renderObsidianMarkdown(
                         note.content || "这篇笔记目前没有可展示的正文内容。",

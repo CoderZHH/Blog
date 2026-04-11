@@ -305,6 +305,18 @@ select {
   line-height: 1.95;
 }
 
+.obsidian-markdown--dense {
+  line-height: 1.22;
+}
+
+.obsidian-markdown--dense p,
+.obsidian-markdown--dense ul,
+.obsidian-markdown--dense ol,
+.obsidian-markdown--dense blockquote,
+.obsidian-markdown--dense pre {
+  margin: 0.72rem 0;
+}
+
 .obsidian-markdown > :first-child {
   margin-top: 0;
 }

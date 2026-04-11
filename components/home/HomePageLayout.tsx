@@ -1,7 +1,4 @@
-import { ContactSection } from "./sections/ContactSection";
 import { HeroSection } from "./sections/HeroSection";
-import { HobbySection } from "./sections/HobbySection";
-import { MapPhotoSection } from "./sections/MapPhotoSection";
 import { NotesCarousel } from "./sections/NotesCarousel";
 import { ObsidianFocusSection } from "./sections/ObsidianFocusSection";
 import { PortfolioSection } from "./sections/PortfolioSection";
@@ -16,9 +13,6 @@ export function HomePageLayout() {
         <PortfolioSection />
         <ObsidianFocusSection />
         <NotesCarousel />
-        <MapPhotoSection />
-        <HobbySection />
-        <ContactSection />
       </div>
     </main>
   );
