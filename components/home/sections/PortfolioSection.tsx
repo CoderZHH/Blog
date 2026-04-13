@@ -784,6 +784,7 @@ export function PortfolioSection() {
                             } as CSSProperties
                           }
                         >
+                          <div className="macbook__loadLabel">What I've Done</div>
                         </div>
                       </div>
                     </div>
@@ -1123,6 +1124,24 @@ export function PortfolioSection() {
             --load-width: 80em;
             --load-height: 6em;
             --load-radius: 3em;
+            --load-label-gap: 2.4em;
+          }
+
+          .portfolio-macbook-scope .macbook__loadLabel {
+            position: absolute;
+            top: calc(50% - (var(--load-height) / 2) - var(--load-label-gap));
+            left: 50%;
+            z-index: 1;
+            transform: translate(-50%, -100%);
+            color: #fff;
+            font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+            font-size: 4.4em;
+            line-height: 1;
+            font-weight: 680;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
           }
 
           .portfolio-macbook-scope .macbook__load::before {
